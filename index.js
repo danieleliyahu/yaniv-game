@@ -13,7 +13,7 @@ class Card{
 //      }
 //     }
 // }
-function createCard(){
+let deck = function createCard(){
     const cards={};
     const shapes = ["Spade", "Heart", "Club", "Diamond"]
     for(let shape of shapes){
@@ -26,4 +26,4 @@ function createCard(){
     }
     return cards;
 }
-console.log(createCard())
+console.log(deck())
