@@ -2,7 +2,6 @@ class Card{
     constructor(suit, rank,value, isJocker = false){
         this.suit = suit;
         this.isJocker = isJocker;
-        this.name = `${suit} ${rank}`
         if(isJocker){
             this.name = 'Jocker'
         }
@@ -27,6 +26,7 @@ class Card{
                 this.value =value;
                 break;
         }
+        this.name =this.suit + " " + this.rank
     }
 }
 
@@ -96,6 +96,7 @@ for (const player of players) {
 pileDeck.pileCards.push(deck.cards[0]);
 const card = document.createElement("div");
 card.setAttribute("class", "card");
+card.setAttribute("id", "top-pile");
 card.innerText = deck.cards[0].suit + " " + deck.cards[0].rank;
 document.getElementById('used-card').append(card);
 deck.cards.shift()
@@ -103,8 +104,8 @@ const yaniv = document.getElementById('yaniv');
 
 
 // while(i < 4){
-    let i = 0
-    let thisTurnPlayer = players[i]
+    let x = 0
+    let thisTurnPlayer = players[x]
     // yaniv.addEventListener('click',function(){
         
     //     if(thisTurnPlayer.points <= 7){
@@ -121,15 +122,20 @@ const yaniv = document.getElementById('yaniv');
     playerDiv.addEventListener("click",function(event){
         const target = event.target.closest('.card');
         if(target){
-            let indexCard ;
             for(let i = 0; i<thisTurnPlayer.playerCards.length; i++){
                 if(thisTurnPlayer.playerCards[i].name === target.innerText){
-                    indexCard = i
+                    const topCard = document.getElementById('top-pile');
+                    topCard.innerText = thisTurnPlayer.playerCards[i].name;
+                    pileDeck.pileCards.push(thisTurnPlayer.playerCards[i]);
+                    thisTurnPlayer.playerCards.splice(i, 1);
+
                 }
             }
             playerDiv.removeChild(target)
-            console.log(target.innerText)
+
+            // console.log(target.innerText)
         }
+        
     })
 
 //     i++;
