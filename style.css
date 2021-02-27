@@ -88,4 +88,8 @@
   width: -moz-max-content;
   width: max-content;
 }
+
+.selected {
+  background-color: yellow;
+}
 /*# sourceMappingURL=style.css.map */
