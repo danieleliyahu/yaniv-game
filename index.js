@@ -24,7 +24,7 @@ class Card{
                 this.rank =rank;
                 break;
         }
-        this.name =this.suit + " " + this.rank
+        this.name = this.suit + " " + this.rank
     }
 }
 
