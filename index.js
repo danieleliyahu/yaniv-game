@@ -114,20 +114,45 @@ const yaniv = document.getElementById('yaniv');
 let turn = 0;
 (function startGame(x){
     let thisTurnPlayer = players[x]
-    // yaniv.addEventListener('click',function(){
-        
-    //     if(thisTurnPlayer.points() <= 7){
-    //         for(let p = 0; p < players.length; p++){
-    //             for(let c = 1; c<players.length; c++){
+    let pointArr = [];
+    yaniv.addEventListener('click',function(){
+        console.log(players[0].points());
+        console.log(players[1].points());
+        console.log(players[2].points());
+        console.log(players[3].points());
+            let i = 0;
+            if(players[x].points()<= 7){
+            if(players[i].points()<players[i+1].points() && players[i].points()<players[i+2].points() && players[i].points()<players[i+3].points() ){
+                let winer = players[i].points();
+                let winerName = `player ${[i]}`
+                console.log(winer);
+                console.log(winerName);
+            }else if(players[i+1].points()<players[i].points() && players[i+1].points()<players[i+2].points() && players[i+1].points()<players[i+3].points() ){
+                let winer = players[i+1].points();
+                let winerName = `player ${[i+1]}`
+                console.log(winer);
+                console.log(winerName);
+            }else if(players[i+2].points()<players[i].points() && players[i+2].points()<players[i+1].points() && players[i+2].points()<players[i+3].points() ){
+                let winer = players[i+2].points();
+                let winerName = `player ${[i+2]}`
+                console.log(winer);
+                console.log(winerName);
+            }else if(players[i+3].points()<players[i].points() && players[i+3].points()<players[i+1].points() && players[i+3].points()<players[i+2].points() ){
+                let winer = players[i+3].points();
+                let winerName = `player ${[i+3]}`
+                console.log(winer);
+                console.log(winerName);
+            }
+        }
+ 
                     
-    //             }
-    //         }
-    //         return 4
-       
-    //     else{
-    //         alert("your points are higher then 7")
-    //     }
-    // })
+                    
+
+                    // alert(`${players[i]} win with ${players[i].points()} points`)
+
+        
+    })
+  
     let playerDiv = document.getElementById(thisTurnPlayer.playerName);
     let selectedCards = []
     let indexs = [];
