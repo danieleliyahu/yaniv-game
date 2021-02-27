@@ -59,9 +59,18 @@ class Deck{
 class PlayerDeck extends Deck{
     constructor(playerName){
         super();
-        this.points = 0
         this.playerName = playerName
         this.playerCards = [];
+    }
+    points(){
+        let sum = 0
+        for (const cards of this.playerCards) {
+            if(cards.value > 10){
+                cards.value = 10;
+            }
+             sum += cards.value;
+        }
+        return sum
     }
 }
 
@@ -107,12 +116,14 @@ let turn = 0;
     let thisTurnPlayer = players[x]
     // yaniv.addEventListener('click',function(){
         
-    //     if(thisTurnPlayer.points <= 7){
-    //         for(player of players){
-            
+    //     if(thisTurnPlayer.points() <= 7){
+    //         for(let p = 0; p < players.length; p++){
+    //             for(let c = 1; c<players.length; c++){
+                    
+    //             }
     //         }
     //         return 4
-    //    
+       
     //     else{
     //         alert("your points are higher then 7")
     //     }
@@ -148,23 +159,28 @@ let turn = 0;
     let dropButton = document.getElementById(`drop-${thisTurnPlayer.playerName}`);
     dropButton.addEventListener("click",dropFunction);
     function dropFunction(){
-        let ok = 0;
-        if(selectedCards.length >= 3){
-            ok += checkVaildSeria(selectedCards);
-        }
-        if(ok === 0){
-            ok += checkVaildSameNumber(selectedCards)
-        }
-        if(ok > 0){
-            doTheDrop()
-            drawCard(thisTurnPlayer, playerDiv)
-            turn++
-            if(turn === 4){
-                turn = 0
+        if(selectedCards.length === 0){
+             alert('you need to pick a card')
+        }else{
+
+            let ok = 0;
+            if(selectedCards.length >= 3){
+                ok += checkVaildSeria(selectedCards);
             }
-            playerDiv.removeEventListener("click",add);
-            dropButton.removeEventListener("click",dropFunction);
-            startGame(turn)
+            if(ok === 0){
+                ok += checkVaildSameNumber(selectedCards)
+            }
+            if(ok > 0){
+                doTheDrop()
+                drawCard(thisTurnPlayer, playerDiv)
+                turn++
+                if(turn === 4){
+                    turn = 0
+                }
+                playerDiv.removeEventListener("click",add);
+                dropButton.removeEventListener("click",dropFunction);
+                startGame(turn)
+            }
         }
     }
 
@@ -228,4 +244,45 @@ let turn = 0;
     }
 
     const usedCards = document.getElementById("used-cards");
+    usedCards.addEventListener('click',drewFromPile);
+    function drewFromPile(){
+        if(selectedCards.length === 0){
+            alert('you need to pick a card')
+        }else{
+
+            let ok = 0;
+            if(selectedCards.length >= 3){
+                ok += checkVaildSeria(selectedCards);
+            }
+            if(ok === 0){
+                ok += checkVaildSameNumber(selectedCards)
+            }
+            if(ok > 0){
+                drewFromPileCard(thisTurnPlayer,playerDiv);
+                doTheDrop()
+                turn++
+                if(turn === 4){
+                    turn = 0
+                }
+                playerDiv.removeEventListener("click",add);
+                dropButton.removeEventListener("click",dropFunction);
+                usedCards.removeEventListener("click",drewFromPile);
+    
+                startGame(turn)
+            }
+        }
+    }
+
+    function drewFromPileCard(playerDiraction,divDiraction){
+        
+        let len = pileDeck.pileCards.length - 1
+        const card = document.createElement("div");
+        card.setAttribute("class", "card");
+        card.innerText = pileDeck.pileCards[len].name;
+        divDiraction.append(card);
+        playerDiraction.playerCards.push(pileDeck.pileCards[len]);
+        pileDeck.pileCards.pop();
+        
+    }
 })(turn)
+
