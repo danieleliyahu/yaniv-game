@@ -61,7 +61,9 @@ class PlayerDeck extends Deck{
         super();
         this.playerName = playerName
         this.playerCards = [];
+        this.score = 0;
     }
+    
     points(){
         let sum = 0
         for (const cards of this.playerCards) {
@@ -114,41 +116,29 @@ const yaniv = document.getElementById('yaniv');
 let turn = 0;
 (function startGame(x){
     let thisTurnPlayer = players[x]
-    let pointArr = [];
     yaniv.addEventListener('click',function(){
-        console.log(players[0].points());
-        console.log(players[1].points());
-        console.log(players[2].points());
-        console.log(players[3].points());
-            let i = 0;
-            if(players[x].points()<= 7){
-            if(players[i].points()<players[i+1].points() && players[i].points()<players[i+2].points() && players[i].points()<players[i+3].points() ){
-                let winer = players[i].points();
-                let winerName = `player ${[i]}`
-                console.log(winer);
-                console.log(winerName);
-            }else if(players[i+1].points()<players[i].points() && players[i+1].points()<players[i+2].points() && players[i+1].points()<players[i+3].points() ){
-                let winer = players[i+1].points();
-                let winerName = `player ${[i+1]}`
-                console.log(winer);
-                console.log(winerName);
-            }else if(players[i+2].points()<players[i].points() && players[i+2].points()<players[i+1].points() && players[i+2].points()<players[i+3].points() ){
-                let winer = players[i+2].points();
-                let winerName = `player ${[i+2]}`
-                console.log(winer);
-                console.log(winerName);
-            }else if(players[i+3].points()<players[i].points() && players[i+3].points()<players[i+1].points() && players[i+3].points()<players[i+2].points() ){
-                let winer = players[i+3].points();
-                let winerName = `player ${[i+3]}`
-                console.log(winer);
-                console.log(winerName);
+        if(thisTurnPlayer.points() <= 7){
+            let winnerPlayer = players[0];
+            for (const player of players) {
+                if(player.points() < winnerPlayer.points()){
+                    winnerPlayer = player
+                }
+                player.score += player.points();
+                if(player.score % 50 === 0 && player.score !== 50){
+                    player.score -= 50;
+                }
+            }  
+            if(winnerPlayer.playerName === thisTurnPlayer.playerName){
+                alert(`${winnerPlayer.playerName} win`)
+                thisTurnPlayer.score -= thisTurnPlayer.points(); 
+            } else{
+                alert("ASAF" + winnerPlayer.playerName)
+                thisTurnPlayer.score += 30;
+                winnerPlayer.score -= winnerPlayer.points();
             }
         }
- 
-                    
-                    
-
-                    // alert(`${players[i]} win with ${players[i].points()} points`)
+           
+                
 
         
     })
