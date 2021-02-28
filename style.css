@@ -87,9 +87,14 @@
   width: -webkit-max-content;
   width: -moz-max-content;
   width: max-content;
+  color: green;
 }
 
 .selected {
   background-color: yellow;
+}
+
+.fliped {
+  color: black;
 }
 /*# sourceMappingURL=style.css.map */

@@ -83,6 +83,38 @@ class PileDeck extends Deck{
     }
 }
 
+const players = [new PlayerDeck("player1"),new PlayerDeck("player2"),new PlayerDeck("player3"),new PlayerDeck("player4")];
+let turn = Math.floor(Math.random() * 4);
+const deck = new Deck();
+const pileDeck = new PileDeck();
+
+function removeCards(){
+    document.querySelectorAll('.card').forEach(div => div.remove());
+    players.forEach(player => player.playerCards.splice(0, player.playerCards.length));
+    pileDeck.pileCards.splice(0, pileDeck.pileCards.length);
+    deck.cards.splice(0, deck.cards.length);
+}
+
+function startRound(){
+    deck.create();
+    deck.suffle();
+    for (const player of players) {
+        const playerName=document.getElementById(player.playerName);
+        for (let i = 0; i < 5; i++) {
+            drawCard(player,playerName)
+        }
+    }
+    pileDeck.pileCards.push(deck.cards[0]);
+    const card = document.createElement("div");
+    card.setAttribute("class", "card fliped");
+    card.setAttribute("id", "top-pile");
+    card.innerText = deck.cards[0].name;
+    document.getElementById('used-cards').append(card);
+    deck.cards.shift()
+    
+}
+startRound()
+
 function drawCard(playerDiraction, divDiraction){
     playerDiraction.playerCards.push(deck.cards[0]);
     const card = document.createElement("div");
@@ -91,67 +123,62 @@ function drawCard(playerDiraction, divDiraction){
     divDiraction.append(card);
     deck.cards.shift()
 }
-
-const deck = new Deck();
-const pileDeck = new PileDeck();
-const players = [new PlayerDeck("player1"),new PlayerDeck("player2"),new PlayerDeck("player3"),new PlayerDeck("player4")];
-deck.create();
-deck.suffle();
-for (const player of players) {
-    const playerName=document.getElementById(player.playerName);
-    for (let i = 0; i < 5; i++) {
-        drawCard(player,playerName)
-    }
-}
-
-pileDeck.pileCards.push(deck.cards[0]);
-const card = document.createElement("div");
-card.setAttribute("class", "card");
-card.setAttribute("id", "top-pile");
-card.innerText = deck.cards[0].name;
-document.getElementById('used-cards').append(card);
-deck.cards.shift()
-const yaniv = document.getElementById('yaniv');
-
-let turn = 0;
+alert(`player ${turn + 1} begins`);
 (function startGame(x){
     let thisTurnPlayer = players[x]
-    yaniv.addEventListener('click',function(){
-        if(thisTurnPlayer.points() <= 7){
+    let playerDiv = document.getElementById(thisTurnPlayer.playerName);
+    playerDiv.querySelectorAll(".card").forEach(card => card.className = "card fliped");
+    const yaniv = document.getElementById('yaniv');
+    yaniv.addEventListener('click',pushYaniv)
+    function pushYaniv(){
+        if(thisTurnPlayer.points() <= 100){
             let winnerPlayer = players[0];
-            for (const player of players) {
+            turn = 0;
+            for (let i = 0; i <players.length; i++) {
+                let player = players[i];
                 if(player.points() < winnerPlayer.points()){
                     winnerPlayer = player
+                    turn = i;
                 }
                 player.score += player.points();
+                if(player.score > 200){
+                    players.splice(i, 1);
+                    document.getElementById(`${player.playerName}`).remove();
+                }
                 if(player.score % 50 === 0 && player.score !== 50){
                     player.score -= 50;
                 }
+                if(players.length === 1){
+                    alert(`you won!`);
+                    return;
+                }
+                
             }  
             if(winnerPlayer.playerName === thisTurnPlayer.playerName){
-                alert(`${winnerPlayer.playerName} win`)
+                alert(`YANIV ${winnerPlayer.playerName}`)
                 thisTurnPlayer.score -= thisTurnPlayer.points(); 
             } else{
-                alert("ASAF" + winnerPlayer.playerName)
+                alert("ASAF " + winnerPlayer.playerName)
                 thisTurnPlayer.score += 30;
                 winnerPlayer.score -= winnerPlayer.points();
-            }
+            } 
+            removeCards()
+            startRound()
+            yaniv.removeEventListener('click',pushYaniv);
+            playerDiv.removeEventListener("click",add);
+            dropButton.removeEventListener("click",dropFunction);
+            usedCards.removeEventListener("click",drewFromPile);
+            startGame(turn)
         }
-           
-                
-
-        
-    })
-  
-    let playerDiv = document.getElementById(thisTurnPlayer.playerName);
+    }
     let selectedCards = []
     let indexs = [];
     playerDiv.addEventListener("click",add)
     function add(event){
         const target = event.target.closest('.card');
         if(target){
-            if(target.className === "card selected"){
-                target.className = "card";
+            if(target.className === "card selected fliped"){
+                target.className = "card fliped";
                 for(let i = 0; i<selectedCards.length; i++){
                     if(selectedCards[i].name === target.innerText){
                         indexs.splice(i, 1);
@@ -160,7 +187,7 @@ let turn = 0;
                 }
             }
             else{
-                target.className = "card selected";
+                target.className = "card selected fliped";
                 for(let i = 0; i<thisTurnPlayer.playerCards.length; i++){
                     if(thisTurnPlayer.playerCards[i].name === target.innerText){
                         indexs.push(i);
@@ -189,11 +216,14 @@ let turn = 0;
                 doTheDrop()
                 drawCard(thisTurnPlayer, playerDiv)
                 turn++
-                if(turn === 4){
+                if(turn === players.length){
                     turn = 0
                 }
+                playerDiv.querySelectorAll(".card").forEach(card => card.className = "card");
+                yaniv.removeEventListener('click',pushYaniv);
                 playerDiv.removeEventListener("click",add);
                 dropButton.removeEventListener("click",dropFunction);
+                usedCards.removeEventListener("click",drewFromPile);
                 startGame(turn)
             }
         }
@@ -279,6 +309,8 @@ let turn = 0;
                 if(turn === 4){
                     turn = 0
                 }
+                playerDiv.querySelectorAll(".card").forEach(card => card.className = "card");
+                yaniv.removeEventListener('click',pushYaniv)
                 playerDiv.removeEventListener("click",add);
                 dropButton.removeEventListener("click",dropFunction);
                 usedCards.removeEventListener("click",drewFromPile);
