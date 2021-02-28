@@ -123,20 +123,24 @@ function drawCard(playerDiraction, divDiraction){
     divDiraction.append(card);
     deck.cards.shift()
 }
-alert(`player ${turn + 1} begins`);
+
 (function startGame(x){
     let thisTurnPlayer = players[x]
     let playerDiv = document.getElementById(thisTurnPlayer.playerName);
+    let playerPoints = document.createElement("div");
+    playerPoints.innerHTML = thisTurnPlayer.points()
+    playerPoints.setAttribute("class", "playerPoints");
+    playerDiv.append(playerPoints);
     playerDiv.querySelectorAll(".card").forEach(card => card.className = "card fliped");
     const yaniv = document.getElementById('yaniv');
-    yaniv.addEventListener('click',pushYaniv)
+    yaniv.addEventListener('click',pushYaniv);
+
     function pushYaniv(){
         if(thisTurnPlayer.points() <= 100){
-            let winnerPlayer = players[0];
-            turn = 0;
+            let winnerPlayer = thisTurnPlayer;
             for (let i = 0; i <players.length; i++) {
                 let player = players[i];
-                if(player.points() < winnerPlayer.points()){
+                if(player.points() <= winnerPlayer.points()){
                     winnerPlayer = player
                     turn = i;
                 }
@@ -152,7 +156,6 @@ alert(`player ${turn + 1} begins`);
                     alert(`you won!`);
                     return;
                 }
-                
             }  
             if(winnerPlayer.playerName === thisTurnPlayer.playerName){
                 alert(`YANIV ${winnerPlayer.playerName}`)
@@ -164,6 +167,7 @@ alert(`player ${turn + 1} begins`);
             } 
             removeCards()
             startRound()
+            playerPoints.remove()
             yaniv.removeEventListener('click',pushYaniv);
             playerDiv.removeEventListener("click",add);
             dropButton.removeEventListener("click",dropFunction);
@@ -172,7 +176,6 @@ alert(`player ${turn + 1} begins`);
         }
     }
     let selectedCards = []
-    let indexs = [];
     playerDiv.addEventListener("click",add)
     function add(event){
         const target = event.target.closest('.card');
@@ -181,7 +184,6 @@ alert(`player ${turn + 1} begins`);
                 target.className = "card fliped";
                 for(let i = 0; i<selectedCards.length; i++){
                     if(selectedCards[i].name === target.innerText){
-                        indexs.splice(i, 1);
                         selectedCards.splice(i, 1);
                     }
                 }
@@ -190,7 +192,6 @@ alert(`player ${turn + 1} begins`);
                 target.className = "card selected fliped";
                 for(let i = 0; i<thisTurnPlayer.playerCards.length; i++){
                     if(thisTurnPlayer.playerCards[i].name === target.innerText){
-                        indexs.push(i);
                         selectedCards.push(thisTurnPlayer.playerCards[i]);
                     }
                 }
@@ -206,6 +207,7 @@ alert(`player ${turn + 1} begins`);
         }else{
 
             let ok = 0;
+
             if(selectedCards.length >= 3){
                 ok += checkVaildSeria(selectedCards);
             }
@@ -219,12 +221,16 @@ alert(`player ${turn + 1} begins`);
                 if(turn === players.length){
                     turn = 0
                 }
+                playerPoints.remove()
                 playerDiv.querySelectorAll(".card").forEach(card => card.className = "card");
                 yaniv.removeEventListener('click',pushYaniv);
                 playerDiv.removeEventListener("click",add);
                 dropButton.removeEventListener("click",dropFunction);
                 usedCards.removeEventListener("click",drewFromPile);
-                startGame(turn)
+                startGame(turn);
+            }
+            else{
+                alert("you enter worng cards")
             }
         }
     }
@@ -235,10 +241,15 @@ alert(`player ${turn + 1} begins`);
            topCard.innerText = selectedCards[i].name;
            pileDeck.pileCards.push(selectedCards[i]);
        }
-       selectedCards.splice(0, selectedCards.length);
-       for (const index of indexs) {
-           thisTurnPlayer.playerCards.splice(index, 1);
-       }
+       for (const card of selectedCards) {
+           for (let i = 0; i < thisTurnPlayer.playerCards.length; i++) {
+               const playerCard = thisTurnPlayer.playerCards[i];
+               if(playerCard.name === card.name){
+                thisTurnPlayer.playerCards.splice(i, 1);
+               }
+           }
+        }
+        selectedCards.splice(0, selectedCards.length);
        document.querySelectorAll('.selected').forEach(element => element.remove());
     }
 
@@ -255,7 +266,7 @@ alert(`player ${turn + 1} begins`);
                     }
                 }
                 if(selectedCards[i].rank !== selectedCards[t].rank){
-                    alert("you enter worng cards")
+                    
                     return 0;
                 }
             }
@@ -273,15 +284,23 @@ alert(`player ${turn + 1} begins`);
             }
             return 0;
         });
-        for (let i = 0; i < sortedCards.length; i++) {
-            if(i + 1 === sortedCards.length){
-                return 1
+        let joker = sortedCards.findIndex((card)=>card.value>0) //[0,0,2,5]
+        for (let i = joker; i < sortedCards.length-1; i++) {
+            
+            if(sortedCards[i].suit !== sortedCards[i+1].suit){
+                return 0;
             }
-    
-            if(sortedCards[i].value !== (sortedCards[i+1].value - 1) && sortedCards[i].suit !== sortedCards[i+1].suit){
-                alert("you enter worng cards")
-                    return 0;
+            const dif = sortedCards[i].value - sortedCards[i+1].value +1;
+            joker += dif
+
+            if(joker < 0 ){
+                return 0;
             }
+            
+            // if(sortedCards[i].value !== (sortedCards[i+1].value - 1) && sortedCards[i].suit !== sortedCards[i+1].suit){
+            //     alert("you enter worng cards")
+            //         return 0;
+            // }
             
         }
 
@@ -309,6 +328,7 @@ alert(`player ${turn + 1} begins`);
                 if(turn === 4){
                     turn = 0
                 }
+                playerPoints.remove()
                 playerDiv.querySelectorAll(".card").forEach(card => card.className = "card");
                 yaniv.removeEventListener('click',pushYaniv)
                 playerDiv.removeEventListener("click",add);
@@ -316,6 +336,9 @@ alert(`player ${turn + 1} begins`);
                 usedCards.removeEventListener("click",drewFromPile);
     
                 startGame(turn)
+            }
+            else{
+                alert("you enter worng cards");
             }
         }
     }
