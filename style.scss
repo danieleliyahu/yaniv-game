@@ -42,15 +42,21 @@
 }
 
 .card{
-    border: 1px solid black;
-    padding: 40px 20px;
-    margin: 5px 5px;
-    width: max-content;
-    color:green ;
+    // border: 1px solid black;
+    // padding: 40px 20px;
+    // margin: 5px 5px;
+    // width: max-content;
+    // color:green ;
 }
 .selected{
     background-color: yellow;
+    filter: brightness(50%);
 }
 .fliped{
     color: black;
+    content:url(assests/cards-svg/Card_back.svg);
+}
+img{
+    width: 50px;
+    
 }

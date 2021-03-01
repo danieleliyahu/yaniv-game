@@ -80,21 +80,18 @@
           flex-direction: column;
 }
 
-.card {
-  border: 1px solid black;
-  padding: 40px 20px;
-  margin: 5px 5px;
-  width: -webkit-max-content;
-  width: -moz-max-content;
-  width: max-content;
-  color: green;
-}
-
 .selected {
   background-color: yellow;
+  -webkit-filter: brightness(50%);
+          filter: brightness(50%);
 }
 
 .fliped {
   color: black;
+  content: url(assests/cards-svg/Card_back.svg);
+}
+
+img {
+  width: 50px;
 }
 /*# sourceMappingURL=style.css.map */

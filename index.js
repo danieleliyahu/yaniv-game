@@ -3,9 +3,11 @@ class Card{
         this.suit = suit;
         this.isJoker = isJoker;
         this.value =value;
+        this.imgName = value + suit;
         if(isJoker){
             this.arr = [1,2,3,4,5,6,7,8,9,10,11,12,13]
             this.name = 'Joker'
+            this.imgName = 'Black_joker';
         }
         switch (rank) {
             case 1:
@@ -34,7 +36,7 @@ class Deck{
         this.cards=[];
     }
     create(){
-        const shapes = ["Spade", "Heart", "Club", "Diamond"];
+        const shapes = ["S", "H", "C", "D"];
         for (const shape of shapes) {
             for (let i = 1; i <= 13; i++) {
                 this.cards.push(new Card(shape,i, i))
@@ -106,9 +108,14 @@ function startRound(){
     }
     pileDeck.pileCards.push(deck.cards[0]);
     const card = document.createElement("div");
-    card.setAttribute("class", "card fliped");
-    card.setAttribute("id", "top-pile");
-    card.innerText = deck.cards[0].name;
+    let img = document.createElement('img');
+    img.alt = deck.cards[0].name;
+    img.src = 'assests/cards-svg/' + deck.cards[0].imgName + '.svg';
+    
+    document.getElementById('used-cards').appendChild(img)
+    img.setAttribute("class", "card");
+    img.setAttribute("id", "top-pile");
+    img.alt = deck.cards[0].name;
     document.getElementById('used-cards').append(card);
     deck.cards.shift()
     
@@ -120,18 +127,25 @@ function drawCard(playerDiraction, divDiraction){
     const card = document.createElement("div");
     card.setAttribute("class", "card");
     card.innerText = deck.cards[0].name;
-    divDiraction.append(card);
+    let img = document.createElement('img');
+    img.setAttribute("class", "card fliped");
+    img.alt = deck.cards[0].name;
+    img.src = 'assests/cards-svg/' + deck.cards[0].imgName + '.svg';
+    
+    divDiraction.appendChild(img)
+    img.append(card);
     deck.cards.shift()
 }
 
 (function startGame(x){
     let thisTurnPlayer = players[x]
+    alert(`turn of ${thisTurnPlayer.playerName}`)
     let playerDiv = document.getElementById(thisTurnPlayer.playerName);
     let playerPoints = document.createElement("div");
     playerPoints.innerHTML = thisTurnPlayer.points()
     playerPoints.setAttribute("class", "playerPoints");
     playerDiv.append(playerPoints);
-    playerDiv.querySelectorAll(".card").forEach(card => card.className = "card fliped");
+    playerDiv.querySelectorAll(".card").forEach(card => card.className = "card");
     const yaniv = document.getElementById('yaniv');
     yaniv.addEventListener('click',pushYaniv);
 
@@ -178,20 +192,21 @@ function drawCard(playerDiraction, divDiraction){
     let selectedCards = []
     playerDiv.addEventListener("click",add)
     function add(event){
-        const target = event.target.closest('.card');
+        let target = event.target.closest('img');
+        
         if(target){
-            if(target.className === "card selected fliped"){
-                target.className = "card fliped";
+            if(target.className === "card selected "){
+                target.className = "card ";
                 for(let i = 0; i<selectedCards.length; i++){
-                    if(selectedCards[i].name === target.innerText){
+                    if(selectedCards[i].name === target.alt){
                         selectedCards.splice(i, 1);
                     }
                 }
             }
             else{
-                target.className = "card selected fliped";
+                target.className = "card selected ";
                 for(let i = 0; i<thisTurnPlayer.playerCards.length; i++){
-                    if(thisTurnPlayer.playerCards[i].name === target.innerText){
+                    if(thisTurnPlayer.playerCards[i].name === target.alt){
                         selectedCards.push(thisTurnPlayer.playerCards[i]);
                     }
                 }
@@ -222,7 +237,7 @@ function drawCard(playerDiraction, divDiraction){
                     turn = 0
                 }
                 playerPoints.remove()
-                playerDiv.querySelectorAll(".card").forEach(card => card.className = "card");
+                playerDiv.querySelectorAll(".card").forEach(card => card.className = "card fliped");
                 yaniv.removeEventListener('click',pushYaniv);
                 playerDiv.removeEventListener("click",add);
                 dropButton.removeEventListener("click",dropFunction);
@@ -237,8 +252,10 @@ function drawCard(playerDiraction, divDiraction){
 
     function doTheDrop(){
        const topCard = document.getElementById('top-pile');
+       const img = document.getElementById('top-pile');
        for(let i=0; i<selectedCards.length; i++){
-           topCard.innerText = selectedCards[i].name;
+           img.alt = selectedCards[i].name;
+           img.src = 'assests/cards-svg/'+selectedCards[i].imgName+'.svg';
            pileDeck.pileCards.push(selectedCards[i]);
        }
        for (const card of selectedCards) {
@@ -329,7 +346,7 @@ function drawCard(playerDiraction, divDiraction){
                     turn = 0
                 }
                 playerPoints.remove()
-                playerDiv.querySelectorAll(".card").forEach(card => card.className = "card");
+                playerDiv.querySelectorAll(".card").forEach(card => card.className = "card fliped");
                 yaniv.removeEventListener('click',pushYaniv)
                 playerDiv.removeEventListener("click",add);
                 dropButton.removeEventListener("click",dropFunction);
@@ -342,17 +359,34 @@ function drawCard(playerDiraction, divDiraction){
             }
         }
     }
-
+    const card = document.createElement("div");
+    // playerDiraction.playerCards.push(deck.cards[0]);
+    // const card = document.createElement("div");
+    // card.setAttribute("class", "card");
+    // card.innerText = deck.cards[0].name;
+    // let img = document.createElement('img');
+    // img.setAttribute("class", "card fliped");
+    // img.alt = deck.cards[0].name;
+    // img.src = 'assests/cards-svg/' + deck.cards[0].imgName + '.svg';
+    
+    // divDiraction.appendChild(img)
+    // img.append(card);
     function drewFromPileCard(playerDiraction,divDiraction){
         
         let len = pileDeck.pileCards.length - 1
         const card = document.createElement("div");
         card.setAttribute("class", "card");
+        let img = document.createElement('img');
+        img.setAttribute("class", "card fliped");
         card.innerText = pileDeck.pileCards[len].name;
-        divDiraction.append(card);
+        img.alt = pileDeck.pileCards[len].name;
+        img.src = 'assests/cards-svg/' + pileDeck.pileCards[len].imgName + '.svg';
         playerDiraction.playerCards.push(pileDeck.pileCards[len]);
+        divDiraction.appendChild(img)
+        img.append(card);
         pileDeck.pileCards.pop();
         
+ 
     }
 })(turn)
 
