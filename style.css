@@ -88,10 +88,40 @@
 
 .fliped {
   color: black;
-  content: url(assests/cards-svg/Card_back.svg);
+  content: url(assests/cards-svg/backcard.jpg);
 }
 
 img {
   width: 80px;
+}
+
+#point-table {
+  border: 1px solid black;
+  border-collapse: collapse;
+}
+
+#table {
+  width: -webkit-max-content;
+  width: -moz-max-content;
+  width: max-content;
+  height: 100px;
+  overflow-y: auto;
+}
+
+#point-table th {
+  border: 1px solid black;
+}
+
+#point-table td {
+  border: 1px solid black;
+  text-align: center;
+}
+
+.table-head {
+  position: -webkit-sticky;
+  position: sticky;
+  top: 0;
+  color: white;
+  background-color: black;
 }
 /*# sourceMappingURL=style.css.map */
