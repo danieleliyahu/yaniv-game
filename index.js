@@ -150,7 +150,7 @@ function drawCard(playerDiraction, divDiraction){
     yaniv.addEventListener('click',pushYaniv);
 
     function pushYaniv(){
-        if(thisTurnPlayer.points() <= 100){
+        if(thisTurnPlayer.points() <= 7){
             let winnerPlayer = thisTurnPlayer;
             for (let i = 0; i <players.length; i++) {
                 let player = players[i];
