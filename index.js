@@ -128,9 +128,29 @@ function drawCard(playerDiraction, divDiraction){
     divDiraction.appendChild(img)
     deck.cards.shift()
 }
+function updateTable(playersArr){
+    const trHead = document.createElement("tr");
+    const table = document.createElement("table");
+    table.setAttribute("id", "point-table")
+    const tableDiv = document.getElementById("table");
+    const tr = document.createElement("tr");
+    for (const player of playersArr) {
+        const th = document.createElement("th");
+        th.innerHTML = player.playerName;
+        trHead.append(th);
+    }
+    table.append(trHead);
+    for (const player of playersArr) {
+        const td = document.createElement("td");
+        td.innerHTML = player.score;
+        tr.append(td);
+    }
+    table.append(tr);
+    tableDiv.append(table)
+}
 
+updateTable(players);
 (function startGame(x){
-    updateTable(players);
     let thisTurnPlayer = players[x]
     let playerDiv = document.getElementById(thisTurnPlayer.playerName);
     let playerPoints = document.createElement("div");
@@ -174,7 +194,7 @@ function drawCard(playerDiraction, divDiraction){
             } 
             removeCards()
             startRound()
-            // playerDiv.querySelectorAll(".card").forEach(card => card.className = "card");
+            // playerDiv.querySelectorAll(".card").forEach(card => card.className = "card fliped");
             document.getElementById('top-pile').remove()
             playerPoints.remove()
             document.getElementById("point-table").remove();
@@ -182,30 +202,11 @@ function drawCard(playerDiraction, divDiraction){
             playerDiv.removeEventListener("click",add);
             dropButton.removeEventListener("click",dropFunction);
             usedCards.removeEventListener("click",drewFromPile);
+            updateTable(players);
             startGame(turn)
         }
     }
 
-    function updateTable(playersArr){
-        const trHead = document.createElement("tr");
-        const table = document.createElement("table");
-        table.setAttribute("id", "point-table")
-        const tableDiv = document.getElementById("table");
-        const tr = document.createElement("tr");
-        for (const player of playersArr) {
-            const th = document.createElement("th");
-            th.innerHTML = player.playerName;
-            trHead.append(th);
-        }
-        table.append(trHead);
-        for (const player of playersArr) {
-            const td = document.createElement("td");
-            td.innerHTML = player.score;
-            tr.append(td);
-        }
-        table.append(tr);
-        tableDiv.append(table)
-    }
 
     let selectedCards = []
     playerDiv.addEventListener("click",add)
@@ -255,12 +256,9 @@ function drawCard(playerDiraction, divDiraction){
                     turn = 0
                 }
                 playerPoints.remove()
-                // playerDiv.querySelectorAll(".card").forEach(card => card.className = "card fliped");
-                document.getElementsByClassName("playerPoints").remove()
-                playerPoints = document.createElement("div");
-                playerPoints.innerHTML = thisTurnPlayer.points()
-                playerPoints.setAttribute("class", "playerPoints");
-                playerDiv.append(playerPoints);
+                playerDiv.querySelectorAll(".card").forEach(card => card.className = "card fliped");
+
+
                 yaniv.removeEventListener('click',pushYaniv);
                 playerDiv.removeEventListener("click",add);
                 dropButton.removeEventListener("click",dropFunction);
@@ -369,7 +367,7 @@ function drawCard(playerDiraction, divDiraction){
                     turn = 0
                 }
                 playerPoints.remove()
-                // playerDiv.querySelectorAll(".card").forEach(card => card.className = "card fliped");
+                playerDiv.querySelectorAll(".card").forEach(card => card.className = "card fliped");
                 yaniv.removeEventListener('click',pushYaniv)
                 playerDiv.removeEventListener("click",add);
                 dropButton.removeEventListener("click",dropFunction);
