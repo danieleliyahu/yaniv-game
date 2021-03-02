@@ -162,7 +162,7 @@ updateTable(players);
     yaniv.addEventListener('click',pushYaniv);
 
     function pushYaniv(){
-        if(thisTurnPlayer.points() <= 100){
+        if(thisTurnPlayer.points() <= 7){
             let winnerPlayer = thisTurnPlayer;
             turn = x;
             for (let i = 0; i <players.length; i++) {
